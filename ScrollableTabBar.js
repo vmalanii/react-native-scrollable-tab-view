@@ -106,22 +106,24 @@ const ScrollableTabBar = createReactClass({
   },
 
   updateTabUnderline(position, pageOffset, tabCount) {
-    const lineLeft = this._tabsMeasurements[position].left;
-    const lineRight = this._tabsMeasurements[position].right;
+      const tempWidth = 30;
+      const lineLeft = this._tabsMeasurements[position].left;
+      const lineRight = this._tabsMeasurements[position].right;
+      let tabWidth;
 
-    if (position < tabCount - 1) {
-      const nextTabLeft = this._tabsMeasurements[position + 1].left;
-      const nextTabRight = this._tabsMeasurements[position + 1].right;
-
-      const newLineLeft = (pageOffset * nextTabLeft + (1 - pageOffset) * lineLeft);
-      const newLineRight = (pageOffset * nextTabRight + (1 - pageOffset) * lineRight);
-
-      this.state._leftTabUnderline.setValue(newLineLeft);
-      this.state._widthTabUnderline.setValue(newLineRight - newLineLeft);
-    } else {
-      this.state._leftTabUnderline.setValue(lineLeft);
-      this.state._widthTabUnderline.setValue(lineRight - lineLeft);
-    }
+      if (position < tabCount - 1) {
+          const nextTabLeft = this._tabsMeasurements[position + 1].left;
+          const nextTabRight = this._tabsMeasurements[position + 1].right;
+          const newLineLeft = (pageOffset * nextTabLeft + (1 - pageOffset) * lineLeft);
+          const newLineRight = (pageOffset * nextTabRight + (1 - pageOffset) * lineRight);
+          tabWidth = newLineRight - newLineLeft;
+          this.state._leftTabUnderline.setValue(newLineLeft+(tabWidth-30)/2);
+          this.state._widthTabUnderline.setValue(tempWidth);
+      } else {
+          tabWidth = lineRight - lineLeft;
+          this.state._leftTabUnderline.setValue(lineLeft + (tabWidth-30)/2);
+          this.state._widthTabUnderline.setValue(tempWidth);
+      }
   },
 
   renderTab(name, page, isTabActive, onPressHandler, onLayoutHandler) {
@@ -220,19 +222,16 @@ module.exports = ScrollableTabBar;
 
 const styles = StyleSheet.create({
   tab: {
-    height: 49,
+    height: 70,
     alignItems: 'center',
     justifyContent: 'center',
     paddingLeft: 20,
     paddingRight: 20,
   },
   container: {
-    height: 50,
-    borderWidth: 1,
-    borderTopWidth: 0,
-    borderLeftWidth: 0,
-    borderRightWidth: 0,
-    borderColor: '#ccc',
+    height: 70,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30
   },
   tabs: {
     flexDirection: 'row',
